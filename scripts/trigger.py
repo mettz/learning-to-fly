@@ -9,6 +9,9 @@ import time
 import struct
 import argparse
 import threading
+import logging
+
+# logging.basicConfig(level=logging.DEBUG)
 
 
 def send_hover_packet(cf, height, vx=0, vy=0, yawrate=0):
@@ -26,7 +29,7 @@ def send_learned_policy_packet(cf):
     cf.send_packet(pk)
 
 def mode_hover_original(cf, args):
-    set_param(cf, "rlt.trigger", 0) # setting the trigger mode to the custom command (cf. https://github.com/arplaboratory/learning_to_fly_controller/blob/0a7680de591d85813f1cd27834b240aeac962fdd/rl_tools_controller.c#L80)
+    # set_param(cf, "rlt.trigger", 0) # setting the trigger mode to the custom command (cf. https://github.com/arplaboratory/learning_to_fly_controller/blob/0a7680de591d85813f1cd27834b240aeac962fdd/rl_tools_controller.c#L80)
     input("Press enter to start hovering")
     prev = time.time()
     acc = 0
@@ -69,10 +72,12 @@ def mode_hover_learned(cf, args):
         send_learned_policy_packet(cf)
 
 def set_param(cf, name, target):
-    print(f"Parameter {name} was {cf.param.get_value(name)}, setting to {target}")
+    time.sleep(1.0)
     while abs(float(cf.param.get_value(name)) - float(target)) > 1e-5:
+        time.sleep(1.0)
         cf.param.set_value(name, target)
-        time.sleep(0.1)
+        time.sleep(1.0)
+    time.sleep(1.0)
     print(f"Parameter {name} is {cf.param.get_value(name)} now")
 
 
@@ -145,11 +150,11 @@ def mode_takeoff_and_switch(cf, args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    default_uri = 'radio://0/80/2M/E7E7E7E7E7'
+    default_uri = 'radio://0/88/2M/E7E7E7E7EF'
     parser.add_argument('--uri', default=default_uri)
     parser.add_argument('--height', default=0.2, type=float)
-    parser.add_argument('--mode', default='hover_learned', choices=['hover_learned', 'hover_original', 'takeoff_and_switch', 'trajectory_tracking'])
-    parser.add_argument('--trajectory-scale', default=1, type=float, help="Scale of the trajectory")
+    parser.add_argument('--mode', default='hover_original', choices=['hover_learned', 'hover_original', 'takeoff_and_switch', 'trajectory_tracking'])
+    parser.add_argument('--trajectory-scale', default=0.3, type=float, help="Scale of the trajectory")
     parser.add_argument('--trajectory-interval', default=5.5, type=float, help="Interval of the trajectory")
     parser.add_argument('--transition-timeout', default=3, type=float, help="Time after takeoff with the original controller after which the learned controller is used for trajectory tracking")
 
@@ -157,7 +162,10 @@ if __name__ == '__main__':
     uri = uri_helper.uri_from_env(default=default_uri)
     cflib.crtp.init_drivers()
 
-    with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='/tmp/cf_cache')) as scf:
+    with SyncCrazyflie(uri, cf=Crazyflie(rw_cache='./build/cache')) as scf:
+        scf.cf.platform.send_arming_request(True)
+        time.sleep(1.0)
+
         if args.mode == "hover_learned":
             mode_hover_learned(scf.cf, args)
         elif args.mode == "hover_original":
@@ -168,4 +176,3 @@ if __name__ == '__main__':
             mode_trajectory_tracking(scf.cf, args)
         else:
             print("Unknown mode")# 
-

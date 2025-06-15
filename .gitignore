@@ -6,3 +6,5 @@
 /.idea
 /**/*.h5
 *.bin
+.direnv/
+build_firmware/
