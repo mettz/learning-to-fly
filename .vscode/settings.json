@@ -1,0 +1,13 @@
+{
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "[c][cpp]": {
+    "editor.formatOnSave": false
+  },
+  "files.associations": {
+    "*.xml": "html",
+    "*.svg": "html",
+    "*.c": "c",
+    "*.css": "tailwindcss",
+    "iostream": "cpp"
+  }
+}

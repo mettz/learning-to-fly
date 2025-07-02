@@ -21,9 +21,18 @@
         formatter = pkgs.alejandra;
 
         devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            boost
+            hdf5
+            openblas
+            abseil-cpp
+            protobuf
+          ];
           nativeBuildInputs = with pkgs; [
             gcc
             gnumake
+            cmake
+            ninja
             gcc-arm-embedded
             cfclient
             (python3.withPackages (
