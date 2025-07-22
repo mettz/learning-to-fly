@@ -61,6 +61,19 @@ namespace learning_to_fly{
         std::cout << "\t" << "Observation dim: " << CONFIG::ENVIRONMENT::OBSERVATION_DIM << std::endl;
         std::cout << "\t" << "Observation dim privileged: " << CONFIG::ENVIRONMENT::OBSERVATION_DIM_PRIVILEGED << std::endl;
         std::cout << "\t" << "Action dim: " << CONFIG::ENVIRONMENT::ACTION_DIM << std::endl;
+        std::cout << "Timesteps: " << CONFIG::STEP_LIMIT << std::endl;
+
+        std::cout << "Ablation Spec: \n";
+        std::cout << "\t" << "DISTURBANCE: " << ABLATION_SPEC::DISTURBANCE << std::endl;
+        std::cout << "\t" << "OBSERVATION_NOISE: " << ABLATION_SPEC::OBSERVATION_NOISE << std::endl;
+        std::cout << "\t" << "ASYMMETRIC_ACTOR_CRITIC: " << ABLATION_SPEC::ASYMMETRIC_ACTOR_CRITIC << std::endl;
+        std::cout << "\t" << "ROTOR_DELAY: " << ABLATION_SPEC::ROTOR_DELAY << std::endl;
+        std::cout << "\t" << "ACTION_HISTORY: " << ABLATION_SPEC::ACTION_HISTORY << std::endl;
+        std::cout << "\t" << "ENABLE_CURRICULUM: " << ABLATION_SPEC::ENABLE_CURRICULUM << std::endl;
+        std::cout << "\t" << "RECALCULATE_REWARDS: " << ABLATION_SPEC::RECALCULATE_REWARDS << std::endl;
+        std::cout << "\t" << "USE_INITIAL_REWARD_FUNCTION: " << ABLATION_SPEC::USE_INITIAL_REWARD_FUNCTION << std::endl;
+        std::cout << "\t" << "INIT_NORMAL: " << ABLATION_SPEC::INIT_NORMAL << std::endl;
+        std::cout << "\t" << "EXPLORATION_NOISE_DECAY: " << ABLATION_SPEC::EXPLORATION_NOISE_DECAY << std::endl;
     }
 
     template <typename CONFIG>
