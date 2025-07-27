@@ -4,7 +4,7 @@
 /build
 /logs
 /.idea
-/**/*.h5
+/checkpoints/**/*.h5
 *.bin
 .direnv/
 build_firmware/
