@@ -22,7 +22,7 @@ with h5py.File(h5_path, "r") as f:
 class Actor(nn.Module):
     def __init__(self):
         super().__init__()
-        self.l1 = nn.Linear(146, 64)
+        self.l1 = nn.Linear(18, 64)
         self.l2 = nn.Linear(64, 64)
         self.l3 = nn.Linear(64, 4)
         self.tanh = nn.Tanh()
@@ -42,7 +42,7 @@ class Actor(nn.Module):
 
 # Export to ONNX
 model = Actor()
-dummy_input = torch.randn(1, 146)
+dummy_input = torch.randn(1, 18)
 dynamic_axes = {"obs": {0: "batch"}, "actions": {0: "batch"}}
 onnx_filename = "actor.onnx"
 torch.onnx.export(model, dummy_input, onnx_filename, input_names=["obs"], output_names=["actions"], dynamic_axes=dynamic_axes, opset_version=11)
