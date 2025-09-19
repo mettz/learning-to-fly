@@ -74,6 +74,41 @@ namespace learning_to_fly{
         std::cout << "\t" << "USE_INITIAL_REWARD_FUNCTION: " << ABLATION_SPEC::USE_INITIAL_REWARD_FUNCTION << std::endl;
         std::cout << "\t" << "INIT_NORMAL: " << ABLATION_SPEC::INIT_NORMAL << std::endl;
         std::cout << "\t" << "EXPLORATION_NOISE_DECAY: " << ABLATION_SPEC::EXPLORATION_NOISE_DECAY << std::endl;
+
+        using ABL_EVAL =
+            learning_to_fly::config::ABLATION_SPEC_EVAL<ABLATION_SPEC>;
+        std::cout << "Ablation Spec (Eval):\n";
+        std::cout << "\tDISTURBANCE: " << std::boolalpha
+                  << ABL_EVAL::DISTURBANCE << "\n";
+        std::cout << "\tOBSERVATION_NOISE: " << ABL_EVAL::OBSERVATION_NOISE
+                  << "\n";
+        std::cout << "\tASYMMETRIC_ACTOR_CRITIC: "
+                  << ABL_EVAL::ASYMMETRIC_ACTOR_CRITIC << "\n";
+        std::cout << "\tROTOR_DELAY: " << ABL_EVAL::ROTOR_DELAY << "\n";
+        std::cout << "\tACTION_HISTORY: " << ABL_EVAL::ACTION_HISTORY << "\n";
+        std::cout << "\tENABLE_CURRICULUM: " << ABL_EVAL::ENABLE_CURRICULUM
+                  << "\n";
+        std::cout << "\tRECALCULATE_REWARDS: " << ABL_EVAL::RECALCULATE_REWARDS
+                  << "\n";
+        std::cout << "\tUSE_INITIAL_REWARD_FUNCTION: "
+                  << ABL_EVAL::USE_INITIAL_REWARD_FUNCTION << "\n";
+        std::cout << "\tINIT_NORMAL: " << ABL_EVAL::INIT_NORMAL << "\n";
+        std::cout << "\tEXPLORATION_NOISE_DECAY: "
+                  << ABL_EVAL::EXPLORATION_NOISE_DECAY << "\n";
+
+        const auto &pe = ts.env_eval.parameters;
+        std::cout << "Eval dt: " << pe.integration.dt << "\n";
+        std::cout << "Eval obs_noise pos/orient/lin/ang: "
+                  << pe.mdp.observation_noise.position << ", "
+                  << pe.mdp.observation_noise.orientation << ", "
+                  << pe.mdp.observation_noise.linear_velocity << ", "
+                  << pe.mdp.observation_noise.angular_velocity << "\n";
+
+        // Full parameters dump (train and eval)
+        std::cout << "\nEnvironment (Train) Parameters:\n";
+        helpers::dump_environment_parameters(ts.envs[0].parameters);
+        std::cout << "\nEnvironment (Eval) Parameters:\n";
+        helpers::dump_environment_parameters(ts.env_eval.parameters);
     }
 
     template <typename CONFIG>
@@ -85,9 +120,11 @@ namespace learning_to_fly{
         }
         steps::logger(ts);
         steps::checkpoint(ts);
-        steps::validation(ts);
-        steps::curriculum(ts);
+        // steps::validation(ts);
+        // steps::curriculum(ts);
         rlt::rl::algorithms::td3::loop::step(ts);
+        // Log reward components from the most recent transition occasionally
+        steps::log_reward(ts);
         steps::trajectory_collection(ts);
     }
     template <typename CONFIG>

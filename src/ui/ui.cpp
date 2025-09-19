@@ -44,10 +44,8 @@ class websocket_session : public std::enable_shared_from_this<websocket_session>
 
     using ABLATION_SPEC = learning_to_fly::config::DEFAULT_ABLATION_SPEC;
     struct CONFIG: learning_to_fly::config::Config<ABLATION_SPEC>{
-        using DEV_SPEC = rlt::devices::cpu::Specification<rlt::devices::math::CPU, rlt::devices::random::CPU, rlt::devices::logging::CPU>;
-        using DEVICE = rlt::DEVICE_FACTORY<DEV_SPEC>;
         static constexpr TI STEP_LIMIT = 300001;
-        static constexpr bool DETERMINISTIC_EVALUATION = false;
+        static constexpr bool DETERMINISTIC_EVALUATION = true;
         static constexpr TI BASE_SEED = 0;
     };
     using TI = CONFIG::TI;
